@@ -1,0 +1,73 @@
+[
+  {
+    "locationID": 1111111,
+    "name": "Test Home",
+    "country": "US",
+    "ianaTimeZone": "America/Los_Angeles",
+    "devices": [
+      {
+        "firmwareVer": "1.1.5.90",
+        "waterPresent": false,
+        "currentSensorReadings": {
+          "time": "2026-07-01T11:12:02",
+          "temperature": 19.94,
+          "humidity": 49.9
+        },
+        "currentAlarms": [],
+        "lastCheckin": "2026-07-01T11:22:30",
+        "batteryRemaining": 39,
+        "isDeviceOffline": false,
+        "wifiSignalStrength": -52,
+        "deviceClass": "LeakDetector",
+        "deviceType": "Water Leak Detector",
+        "deviceID": "00000000-0000-4000-8000-000000000001",
+        "userDefinedDeviceName": "Test Laundry",
+        "isAlive": true,
+        "macID": "AA:BB:CC:00:00:01",
+        "deviceVariant": "L1_SmartWaterSensor_Retail",
+        "deviceSettings": {
+          "temp": {"high": {"limit": 37}, "low": {"limit": 7}},
+          "humidity": {"high": {"limit": 70}, "low": {"limit": 20}},
+          "buzzerMuted": false,
+          "checkinPeriod": 12,
+          "currentSensorReadPeriod": 60
+        }
+      },
+      {
+        "firmwareVer": "1.1.5.90",
+        "waterPresent": true,
+        "currentSensorReadings": {
+          "time": "2026-07-01T05:10:11",
+          "temperature": 4.5,
+          "humidity": 80.1
+        },
+        "currentAlarms": [
+          {"type": "HighHumidity", "created": "2026-07-01T05:00:00"}
+        ],
+        "lastCheckin": "2026-07-01T05:58:49",
+        "batteryRemaining": 12,
+        "isDeviceOffline": true,
+        "wifiSignalStrength": -70,
+        "deviceClass": "LeakDetector",
+        "deviceType": "Water Leak Detector",
+        "deviceID": "00000000-0000-4000-8000-000000000002",
+        "userDefinedDeviceName": "Test Garage",
+        "isAlive": false,
+        "macID": "AA:BB:CC:00:00:02",
+        "deviceVariant": "L1_SmartWaterSensor_Retail",
+        "deviceSettings": {
+          "temp": {"high": {"limit": 37}, "low": {"limit": 7}},
+          "humidity": {"high": {"limit": 75}, "low": {"limit": 20}},
+          "buzzerMuted": true,
+          "checkinPeriod": 8,
+          "currentSensorReadPeriod": 60
+        }
+      },
+      {
+        "deviceClass": "Thermostat",
+        "deviceType": "Thermostat",
+        "deviceID": "should-be-ignored"
+      }
+    ]
+  }
+]

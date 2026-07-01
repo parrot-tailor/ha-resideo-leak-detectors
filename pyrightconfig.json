@@ -1,0 +1,12 @@
+{
+  "pythonVersion": "3.14",
+  "reportIncompatibleVariableOverride": false,
+  "executionEnvironments": [
+    {
+      "root": "tests",
+      "extraPaths": ["."],
+      "reportTypedDictNotRequiredAccess": false,
+      "reportOptionalMemberAccess": false
+    }
+  ]
+}

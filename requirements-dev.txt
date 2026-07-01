@@ -1,0 +1,23 @@
+# Dev / CI tooling. Home Assistant is only a dev/test dependency here — at
+# runtime HA is provided by the user's running instance (manifest "requirements"
+# stays empty).
+#
+# pytest-homeassistant-custom-component (phacc) is the standard test harness for
+# custom integrations. Each phacc patch release hard-pins ONE exact Home
+# Assistant version plus the full pytest stack HA develops against. We pin
+# phacc == 0.13.340, which brings:
+#     homeassistant == 2026.6.4   (our target stable release; Python 3.14)
+#     pytest == 9.0.3, pytest-asyncio == 1.4.0, pytest-cov == 7.1.0, ...
+# so `make deps` gives every dev + CI the identical HA/pytest environment.
+#
+# Do NOT add separate pytest / pytest-asyncio / pytest-cov pins here — phacc
+# owns those and a second pin would conflict.
+#
+# To target a different HA release, change only this line. Reference:
+#   0.13.336 -> HA 2026.6.0     0.13.340 -> HA 2026.6.4
+#   0.13.343 -> HA 2026.7.0b3   (latest phacc, currently a beta)
+pytest-homeassistant-custom-component == 0.13.340
+
+# Linters/type-checker are independent of the HA version; pinned to latest.
+ruff ~= 0.15.20
+pyright ~= 1.1.411

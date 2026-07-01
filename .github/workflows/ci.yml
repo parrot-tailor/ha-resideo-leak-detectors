@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint & type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: ".python-version"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install -U -r requirements-dev.txt
+      - name: Ruff lint
+        run: ruff check
+      - name: Ruff format check
+        run: ruff format --check --diff
+      - name: Pyright
+        run: pyright --warnings
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: ".python-version"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install -U -r requirements-dev.txt
+      - name: Pytest
+        run: python -m pytest
+
+  hassfest:
+    name: Hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    name: HACS validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hacs/action@main
+        with:
+          category: integration
+          # Brand images are bundled locally in
+          # custom_components/resideo_leak/brand/ (supported since HA 2026.3).
+          # The brands check queries the CDN, which cannot see local assets,
+          # so skip it.
+          ignore: brands

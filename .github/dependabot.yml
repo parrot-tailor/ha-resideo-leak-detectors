@@ -1,0 +1,26 @@
+version: 2
+
+updates:
+  # Python dev/test tooling. Note: the pytest-homeassistant-custom-component
+  # pin also selects the Home Assistant version this integration is tested
+  # against, so a bump here = a bump of the HA target (review accordingly).
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "16:00"
+    groups:
+      pip:
+        patterns: ["*"]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "16:00"
+    groups:
+      github-actions:
+        patterns: ["*"]

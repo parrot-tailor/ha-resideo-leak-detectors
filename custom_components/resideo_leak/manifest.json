@@ -1,0 +1,13 @@
+{
+  "domain": "resideo_leak",
+  "name": "Resideo Leak Detectors",
+  "codeowners": ["@parrot-tailor"],
+  "config_flow": true,
+  "dependencies": ["application_credentials"],
+  "documentation": "https://github.com/parrot-tailor/ha-resideo-leak-detectors",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/parrot-tailor/ha-resideo-leak-detectors/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

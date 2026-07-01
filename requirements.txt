@@ -1,0 +1,4 @@
+# Runtime dependencies are declared in
+# custom_components/resideo_leak/manifest.json ("requirements"). This
+# integration talks to the Resideo API using only aiohttp + helpers that
+# Home Assistant already ships, so there are no extra runtime requirements.
