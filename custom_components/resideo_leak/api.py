@@ -14,19 +14,8 @@ class ResideoOAuth2Implementation(AuthImplementation):
     """OAuth2 implementation for the Honeywell Home / Resideo cloud.
 
     Resideo requires the client id/secret in an HTTP Basic auth header on the
-    token request (and also accepts them in the body). ``appSelect`` lets the
-    user choose between the Resideo and First Alert branded apps at sign-in.
+    token request (and also accepts them in the body).
     """
-
-    @property
-    def extra_authorize_data(self) -> dict[str, Any]:
-        """Return extra query data for the authorize request.
-
-        Returns:
-            Parameters that prompt the user to choose the Resideo or First
-            Alert app.
-        """
-        return {"appSelect": "1"}
 
     async def _token_request(self, data: dict) -> dict:
         """Make a token request with HTTP Basic authentication.

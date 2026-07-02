@@ -70,7 +70,7 @@ async def test_full_flow(
     assert result["url"] == (
         f"{OAUTH2_AUTHORIZE}?response_type=code&client_id={CLIENT_ID}"
         f"&redirect_uri={REDIRECT}"
-        f"&state={state}&appSelect=1"
+        f"&state={state}"
     )
 
     client = await hass_client_no_auth()
