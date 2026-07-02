@@ -1,5 +1,6 @@
 """Resideo API client and OAuth2 implementation bound to Home Assistant."""
 
+import time
 from typing import Any, cast
 
 from aiohttp import BasicAuth, ClientSession
@@ -8,6 +9,50 @@ from homeassistant.helpers import config_entry_oauth2_flow
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import API_BASE
+
+# Refresh once the access token is past this fraction of its lifetime,
+# instead of waiting for expiry, so a token-expiry event is handled
+# silently rather than escalating to a reauth prompt.
+_PROACTIVE_REFRESH_FRACTION = 2 / 3
+
+
+class ResideoOAuth2Session(config_entry_oauth2_flow.OAuth2Session):
+    """OAuth2 session with proactive and forced token refresh.
+
+    Refreshes the token proactively before it expires (via ``valid_token``)
+    and can force a refresh, so an expiry or a 401 is recovered silently
+    instead of prompting the user to re-authenticate.
+    """
+
+    @property
+    def valid_token(self) -> bool:
+        """Return whether the token is fresh enough to use.
+
+        Treats the token as invalid once it is past
+        ``_PROACTIVE_REFRESH_FRACTION`` of its lifetime (not just at expiry),
+        so ``async_ensure_token_valid`` refreshes it early.
+
+        Returns:
+            True while the token is within its proactive-refresh window.
+        """
+        token = self.token
+        try:
+            expires_in = float(token.get("expires_in") or 0)
+        except (TypeError, ValueError):
+            expires_in = 0.0
+        margin = max(
+            config_entry_oauth2_flow.CLOCK_OUT_OF_SYNC_MAX_SEC,
+            expires_in * _PROACTIVE_REFRESH_FRACTION,
+        )
+        return cast(float, token["expires_at"]) > time.time() + margin
+
+    async def force_refresh_token(self) -> None:
+        """Refresh the token regardless of expiry and persist it."""
+        new_token = await self.implementation.async_refresh_token(self.token)
+        self.hass.config_entries.async_update_entry(
+            self.config_entry,
+            data={**self.config_entry.data, "token": new_token},
+        )
 
 
 class ResideoOAuth2Implementation(AuthImplementation):

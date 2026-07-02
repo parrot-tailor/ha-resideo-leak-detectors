@@ -2,7 +2,7 @@
 
 DOMAIN = "resideo_leak"
 
-# OAuth2 endpoints (shared with the official Honeywell Lyric cloud).
+# Honeywell Home / Resideo OAuth2 endpoints.
 OAUTH2_AUTHORIZE = "https://api.honeywellhome.com/oauth2/authorize"
 OAUTH2_TOKEN = "https://api.honeywellhome.com/oauth2/token"
 
@@ -19,7 +19,7 @@ ALARM_DEVICE_OFFLINE = "DeviceOffline"
 # Sensor check-in is user-configurable to 1, 2, or 3 times per day
 # (deviceSettings.checkinPeriod = 24/12/8 hours), so temp/humidity/battery
 # readings update slowly. Polling more often is still cheap and catches leak
-# and alarm state changes sooner. 300s matches the official lyric integration.
+# and alarm state changes sooner; 300s is a reasonable default.
 DEFAULT_UPDATE_INTERVAL = 300
 
 MANUFACTURER = "Resideo"

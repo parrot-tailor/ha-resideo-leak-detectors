@@ -15,7 +15,7 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
-from .api import ResideoApiClient
+from .api import ResideoApiClient, ResideoOAuth2Session
 from .const import DEFAULT_UPDATE_INTERVAL, DEVICE_CLASS_LEAK, DOMAIN
 from .models import LeakDevice
 
@@ -51,6 +51,7 @@ class ResideoLeakCoordinator(DataUpdateCoordinator[dict[str, LeakDevice]]):
         hass: HomeAssistant,
         config_entry: ResideoLeakConfigEntry,
         client: ResideoApiClient,
+        oauth_session: ResideoOAuth2Session,
     ) -> None:
         """Initialize the coordinator.
 
@@ -58,6 +59,7 @@ class ResideoLeakCoordinator(DataUpdateCoordinator[dict[str, LeakDevice]]):
             hass: Home Assistant instance.
             config_entry: Config entry owning this coordinator.
             client: Resideo API client used to fetch device state.
+            oauth_session: OAuth2 session used to (force-)refresh the token.
         """
         super().__init__(
             hass,
@@ -67,6 +69,7 @@ class ResideoLeakCoordinator(DataUpdateCoordinator[dict[str, LeakDevice]]):
             update_interval=timedelta(seconds=DEFAULT_UPDATE_INTERVAL),
         )
         self.client = client
+        self.oauth_session = oauth_session
 
     async def _async_update_data(self) -> dict[str, LeakDevice]:
         """Fetch leak detectors across every location on the account.
@@ -75,16 +78,35 @@ class ResideoLeakCoordinator(DataUpdateCoordinator[dict[str, LeakDevice]]):
             Mapping of device id to its parsed LeakDevice snapshot.
 
         Raises:
-            ConfigEntryAuthFailed: When the token or API rejects the
-                credentials (token 400/401/403, or /locations 401/403).
+            ConfigEntryAuthFailed: When credentials are no longer usable.
             UpdateFailed: On transient network or server errors.
         """
-        # Refresh the OAuth token first. A 400/401/403 from the token endpoint
-        # means the refresh token can no longer be used (Honeywell returns 400
-        # invalid_grant when it expires), so trigger reauth instead of retrying
-        # forever. 429/5xx are transient and stay retryable.
+        return await self._run_update(force_refresh=False)
+
+    async def _run_update(self, force_refresh: bool) -> dict[str, LeakDevice]:
+        """Refresh the token, fetch devices, and retry once on a 401.
+
+        A fetch can return 401 even when the stored token still looks valid.
+        On the first 401 we force a token refresh and retry once; only a
+        second failure escalates to reauth.
+
+        Args:
+            force_refresh: Force a token refresh before fetching (the retry
+                path) instead of the normal expiry-based check.
+
+        Returns:
+            Mapping of device id to its parsed LeakDevice snapshot.
+
+        Raises:
+            ConfigEntryAuthFailed: When the token endpoint rejects the
+                credentials, or a fetch still 401s after a forced refresh.
+            UpdateFailed: On transient network or server errors.
+        """
         try:
-            await self.client.async_get_access_token()
+            if force_refresh:
+                await self.oauth_session.force_refresh_token()
+            else:
+                await self.oauth_session.async_ensure_token_valid()
         except ClientResponseError as err:
             if err.status in (
                 HTTPStatus.BAD_REQUEST,
@@ -100,10 +122,9 @@ class ResideoLeakCoordinator(DataUpdateCoordinator[dict[str, LeakDevice]]):
             async with asyncio.timeout(30):
                 locations = await self.client.get_locations()
         except ClientResponseError as err:
-            if err.status in (
-                HTTPStatus.UNAUTHORIZED,
-                HTTPStatus.FORBIDDEN,
-            ):
+            if err.status in (HTTPStatus.UNAUTHORIZED, HTTPStatus.FORBIDDEN):
+                if not force_refresh:
+                    return await self._run_update(force_refresh=True)
                 raise ConfigEntryAuthFailed from err
             raise UpdateFailed(err) from err
         except (ClientError, TimeoutError) as err:

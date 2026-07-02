@@ -9,7 +9,11 @@ from homeassistant.helpers import (
     config_validation as cv,
 )
 
-from .api import ResideoApiClient, ResideoOAuth2Implementation
+from .api import (
+    ResideoApiClient,
+    ResideoOAuth2Implementation,
+    ResideoOAuth2Session,
+)
 from .const import DOMAIN
 from .coordinator import ResideoLeakConfigEntry, ResideoLeakCoordinator
 
@@ -51,12 +55,10 @@ async def async_setup_entry(
         raise TypeError(msg)
 
     session = aiohttp_client.async_get_clientsession(hass)
-    oauth_session = config_entry_oauth2_flow.OAuth2Session(
-        hass, entry, implementation
-    )
+    oauth_session = ResideoOAuth2Session(hass, entry, implementation)
     client = ResideoApiClient(session, oauth_session, implementation.client_id)
 
-    coordinator = ResideoLeakCoordinator(hass, entry, client)
+    coordinator = ResideoLeakCoordinator(hass, entry, client, oauth_session)
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
 
