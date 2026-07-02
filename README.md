@@ -1,5 +1,12 @@
 # Resideo Leak Detectors for Home Assistant
 
+[![Build Status][build-status-shield]][build-status]
+![Maintenance][maintenance-shield]
+[![GitHub Release][releases-shield]][releases]
+[![License][license-shield]](LICENSE)
+
+[![Buy Me A Coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]
+
 A custom [Home Assistant](https://www.home-assistant.io/) integration for
 Resideo / Honeywell Home Wi-Fi Water Leak & Freeze Detectors
 (`L1_SmartWaterSensor`, also sold under the First Alert brand).
@@ -15,14 +22,14 @@ across every home (location) on that account.
 
 | Platform | Entity | Source |
 | --- | --- | --- |
-| binary_sensor | Leak (moisture) | `waterPresent` |
-| binary_sensor | Connectivity | `isDeviceOffline` |
-| binary_sensor | Problem | `currentAlarms` |
-| sensor | Temperature | `currentSensorReadings.temperature` |
-| sensor | Humidity | `currentSensorReadings.humidity` |
-| sensor | Battery | `batteryRemaining` |
-| sensor | Wi-Fi signal | `wifiSignalStrength` |
-| sensor | Last check-in (diagnostic) | `lastCheckin` |
+| `binary_sensor` | Leak (moisture) | `waterPresent` |
+| `binary_sensor` | Connectivity | `isDeviceOffline` |
+| `binary_sensor` | Problem | `currentAlarms` |
+| `sensor` | Temperature | `currentSensorReadings.temperature` |
+| `sensor` | Humidity | `currentSensorReadings.humidity` |
+| `sensor` | Battery | `batteryRemaining` |
+| `sensor` | Wi-Fi signal | `wifiSignalStrength` |
+| `sensor` | Last check-in (diagnostic) | `lastCheckin` |
 
 The Problem sensor exposes an `active_alarms` attribute listing the raw alarm
 types (e.g. `HighTemperature`, `HighHumidity`), so automations keep working
@@ -108,3 +115,12 @@ Not affiliated with or endorsed by Resideo Technologies, Inc. or Honeywell.
 ## License
 
 Released under the [MIT License](LICENSE).
+
+[build-status]: https://github.com/parrot-tailor/ha-resideo-leak-detectors/actions/workflows/ci.yml?query=branch%3Amain
+[build-status-shield]: https://img.shields.io/github/actions/workflow/status/parrot-tailor/ha-resideo-leak-detectors/ci.yml?branch=main&style=for-the-badge
+[buy-me-a-coffee]: https://buymeacoffee.com/parrot.tailor.coffee
+[buy-me-a-coffee-shield]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/parrot-tailor/ha-resideo-leak-detectors.svg?style=for-the-badge
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2026?style=for-the-badge
+[releases]: https://github.com/parrot-tailor/ha-resideo-leak-detectors/releases
+[releases-shield]: https://img.shields.io/github/release/parrot-tailor/ha-resideo-leak-detectors.svg?style=for-the-badge
