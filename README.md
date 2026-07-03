@@ -123,4 +123,4 @@ Released under the [MIT License](LICENSE).
 [license-shield]: https://img.shields.io/github/license/parrot-tailor/ha-resideo-leak-detectors.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2026?style=for-the-badge
 [releases]: https://github.com/parrot-tailor/ha-resideo-leak-detectors/releases
-[releases-shield]: https://img.shields.io/github/release/parrot-tailor/ha-resideo-leak-detectors.svg?style=for-the-badge
+[releases-shield]: https://img.shields.io/github/v/release/parrot-tailor/ha-resideo-leak-detectors.svg?style=for-the-badge
