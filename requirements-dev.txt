@@ -19,5 +19,5 @@
 pytest-homeassistant-custom-component == 0.13.346
 
 # Linters/type-checker are independent of the HA version; pinned to latest.
-ruff ~= 0.15.21
+ruff ~= 0.15.22
 pyright ~= 1.1.411
