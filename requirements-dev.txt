@@ -16,8 +16,8 @@
 # To target a different HA release, change only this line. Reference:
 #   0.13.336 -> HA 2026.6.0     0.13.340 -> HA 2026.6.4
 #   0.13.343 -> HA 2026.7.0b3   (latest phacc, currently a beta)
-pytest-homeassistant-custom-component == 0.13.346
+pytest-homeassistant-custom-component == 0.13.348
 
 # Linters/type-checker are independent of the HA version; pinned to latest.
-ruff ~= 0.15.21
+ruff ~= 0.16.0
 pyright ~= 1.1.411
